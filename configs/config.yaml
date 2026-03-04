@@ -1,0 +1,83 @@
+# Configuration for Activation Maximization XAI Project
+
+# Data configuration
+data:
+  dataset: "mnist"  # Options: mnist, cifar10, synthetic
+  data_dir: "data"
+  batch_size: 64
+  num_workers: 4
+  image_size: [28, 28]  # For MNIST
+  num_classes: 10
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+
+# Model configuration
+model:
+  architecture: "simple_cnn"  # Options: simple_cnn, resnet18, vgg16
+  input_channels: 1  # 1 for MNIST, 3 for CIFAR
+  hidden_dims: [32, 64, 128]
+  dropout_rate: 0.2
+  pretrained: false
+
+# Training configuration
+training:
+  epochs: 10
+  learning_rate: 0.001
+  weight_decay: 1e-4
+  scheduler: "cosine"  # Options: cosine, step, plateau
+  early_stopping_patience: 5
+  save_best_model: true
+
+# Activation maximization configuration
+activation_maximization:
+  target_layer: "conv2d_1"  # Layer to maximize activation for
+  target_class: 1  # Class to maximize (0-9 for MNIST)
+  iterations: 200
+  learning_rate: 0.01
+  regularization:
+    tv_weight: 0.1  # Total variation regularization
+    l2_weight: 0.01  # L2 regularization
+    blur_weight: 0.0  # Blur regularization
+  optimization_method: "adam"  # Options: adam, sgd, rmsprop
+  gradient_clipping: 1.0
+  noise_std: 0.0  # Add noise for diversity
+  diversity_weight: 0.0  # Encourage diverse patterns
+
+# Evaluation configuration
+evaluation:
+  metrics:
+    - "activation_strength"
+    - "pattern_diversity"
+    - "visual_quality"
+    - "faithfulness"
+  save_visualizations: true
+  visualization_dir: "assets/visualizations"
+  num_samples: 100
+
+# Device configuration
+device:
+  auto_detect: true
+  preferred: "cuda"  # Options: cuda, mps, cpu
+  fallback_order: ["cuda", "mps", "cpu"]
+
+# Logging configuration
+logging:
+  level: "INFO"
+  log_dir: "logs"
+  save_logs: true
+  wandb:
+    enabled: false
+    project: "activation-maximization-xai"
+    entity: null
+
+# Reproducibility
+seed: 42
+deterministic: true
+
+# Demo configuration
+demo:
+  framework: "streamlit"  # Options: streamlit, gradio
+  port: 8501
+  host: "localhost"
+  debug: false
